@@ -37,6 +37,6 @@ before_script:
 script:
   - go clean ./
   - go build ./
-  - ./adr init /tmp
+  - ./adr init tmp
   - ./adr new test 0 0 1
-  - cat /tmp/1-test-0-0-1.md
+  - cat tmp/1-test-0-0-1.md
