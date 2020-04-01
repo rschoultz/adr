@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/fatih/color"
 	"github.com/urfave/cli/v2"
+	"os"
 )
 
 func setCommands(app *cli.App) {
@@ -13,10 +13,12 @@ func setCommands(app *cli.App) {
 			Usage:   "Create a new ADR",
 			Flags:   []cli.Flag{},
 			Action: func(c *cli.Context) error {
-				currentConfig := getConfig()
+
+				projectPath, _ := getProjectPathByCwd()
+				currentConfig := getProjectConfig(projectPath)
 				currentConfig.CurrentAdr++
-				updateConfig(currentConfig)
-				newAdr(currentConfig, c.Args().Slice())
+				updateProjectConfig(projectPath, currentConfig)
+				newAdr(projectPath, currentConfig, c.Args().Slice())
 				return nil
 			},
 		},
@@ -25,17 +27,25 @@ func setCommands(app *cli.App) {
 			Name:        "init",
 			Aliases:     []string{"i"},
 			Usage:       "Initializes the ADR configurations",
-			UsageText:   "adr init /home/user/adrs",
+			UsageText:   "adr init docs/architecture/decisions",
 			Description: "Initializes the ADR configuration with an optional ADR base directory\n This is a a prerequisite to running any other adr sub-command",
 			Action: func(c *cli.Context) error {
+				projectDir, _ := os.Getwd()
 				initDir := c.Args().First()
 				if initDir == "" {
-					initDir = adrDefaultBaseFolder
+					initDir = adrProjectConfigFolderName
 				}
-				color.Green("Initializing ADR base at " + initDir)
-				initBaseDir(initDir)
-				initConfig(initDir)
-				initTemplate()
+				initHomeDir()
+				initHomeConfigIfNotExists()
+				homeConfig := getHomeConfig()
+				newConfig, err := addProject(homeConfig, projectDir)
+				if err != nil {
+					os.Exit(1)
+				}
+				initProjectBaseDir(initDir)
+				writeHomeConfiguration(newConfig)
+				initProjectConfig(projectDir, initDir)
+				initTemplate(projectDir)
 				return nil
 			},
 		},
