@@ -18,7 +18,8 @@ func setCommands(app *cli.App) {
 				currentConfig := getProjectConfig(projectPath)
 				currentConfig.CurrentAdr++
 				updateProjectConfig(projectPath, currentConfig)
-				newAdr(projectPath, currentConfig, c.Args().Slice())
+				filename := newAdr(projectPath, currentConfig, c.Args().Slice())
+				startEditor(filename)
 				return nil
 			},
 		},

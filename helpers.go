@@ -5,7 +5,9 @@ import (
 	"errors"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -149,8 +151,7 @@ func initProjectConfig(projectPath string, baseDir string) {
 }
 
 func initTemplate(projectPath string) {
-	body := []byte(`
-# {{.Number}}. {{.Title}}
+	body := []byte(`# {{.Number}}. {{.Title}}
 ======
 Date: {{.Date}}
 
@@ -221,7 +222,7 @@ func getProjectPathBySubDir(currentDir string) (string, error) {
 	return "", errors.New("Current project not registered. Use 'init' subcommand.")
 }
 
-func newAdr(projectPath string, config AdrProjectConfig, adrName []string) {
+func newAdr(projectPath string, config AdrProjectConfig, adrName []string) (adrFullPath string) {
 
 	adrFullProjectConfigFolderPath := filepath.Join(projectPath, adrProjectConfigFolderName)
 	adrTemplateFilePath := filepath.Join(adrFullProjectConfigFolderPath, adrProjectConfigTemplateName)
@@ -238,7 +239,7 @@ func newAdr(projectPath string, config AdrProjectConfig, adrName []string) {
 		panic(err)
 	}
 	adrFileName := strconv.Itoa(adr.Number) + "-" + strings.Join(strings.Split(strings.Trim(adr.Title, "\n \t"), " "), "-") + ".md"
-	adrFullPath := filepath.Join(projectPath, config.BaseDir, adrFileName)
+	adrFullPath = filepath.Join(projectPath, config.BaseDir, adrFileName)
 	f, err := os.Create(adrFullPath)
 	if err != nil {
 		panic(err)
@@ -246,4 +247,29 @@ func newAdr(projectPath string, config AdrProjectConfig, adrName []string) {
 	useTemplate.Execute(f, adr)
 	f.Close()
 	color.Green("ADR number " + strconv.Itoa(adr.Number) + " was successfully written to : " + adrFullPath)
+
+	return
+}
+
+func startEditor(filename string) {
+	editor, foundEditor := os.LookupEnv("VISUAL")
+
+	if !foundEditor || editor == "" {
+		editor, foundEditor = os.LookupEnv("EDITOR")
+	}
+
+	if !foundEditor || editor == "" {
+		color.Green("No VISUAL or EDITOR environment variable set. Edit manually by (e.g.):\nvi " + filename)
+		return
+	}
+
+	cmd := exec.Command(editor, filename)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+
+	if err != nil {
+		log.Fatalf("Cannot open file with editor: %s", err)
+	}
 }

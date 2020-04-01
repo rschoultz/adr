@@ -39,7 +39,10 @@ adr new my awesome proposition
 ```
 ßthis will create a new numbered ADR in the initialized folder:
 `docs/architecture/decisions/xxx-my-new-awesome-proposition.md`.
+
 Next, just open the file in your preferred markdown editor and starting writing your ADR.
+If you have configured environment variables VISUAL or EDITOR, that editor will be called
+automatically.
 
 ### Add both .adr and the decisions to source control
 
