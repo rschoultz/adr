@@ -47,6 +47,10 @@ const (
 	SUPERSEDED AdrStatus = "Superseded"
 )
 
+const (
+	layoutISO = "2006-01-02"
+)
+
 var usr, _ = user.Current()
 var adrConfigFolderName = ".adr"
 var adrConfigFolderPath = filepath.Join(usr.HomeDir, adrConfigFolderName)
@@ -229,7 +233,7 @@ func newAdr(projectPath string, config AdrProjectConfig, adrName []string) (adrF
 
 	adr := Adr{
 		Title:  strings.Join(adrName, " "),
-		Date:   time.Now().Format(time.RFC3339),
+		Date:   time.Now().Format(layoutISO),
 		Number: config.CurrentAdr,
 		Status: PROPOSED,
 	}
