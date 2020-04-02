@@ -6,12 +6,12 @@ import (
 )
 
 func setCommands(app *cli.App) {
+	var prefix string
 	app.Commands = []*cli.Command{
 		{
 			Name:    "new",
 			Aliases: []string{"c"},
 			Usage:   "Create a new ADR",
-			Flags:   []cli.Flag{},
 			Action: func(c *cli.Context) error {
 
 				currentDir, _ := os.Getwd()
@@ -49,6 +49,35 @@ func setCommands(app *cli.App) {
 				initProjectConfig(projectDir, initDir)
 				initTemplate(projectDir)
 				return nil
+			},
+		},
+		{
+			Name:        "generate",
+			Aliases:     []string{"g"},
+			Usage:       "Generate content",
+			Description: "Generate additional content, like table of contents, based on ADRs already written",
+			Subcommands: []*cli.Command{
+				{
+					Name:  "toc",
+					Usage: "generate table of contents",
+					Flags: []cli.Flag{
+						&cli.StringFlag{
+							Name:        "prefix",
+							Aliases:     []string{"p"},
+							Usage:       "prefix each file link",
+							Required:    false,
+							Destination: &prefix,
+						},
+					},
+					Action: func(c *cli.Context) error {
+						currentDir, _ := os.Getwd()
+						homeConfig := getHomeConfig()
+						projectPath, _ := getProjectPathBySubDir(currentDir, homeConfig)
+						currentConfig := getProjectConfig(projectPath)
+						generateToc(projectPath, currentConfig, prefix)
+						return nil
+					},
+				},
 			},
 		},
 	}
