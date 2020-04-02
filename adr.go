@@ -92,7 +92,7 @@ func visitAdrFile(adrs *[]Adr) filepath.WalkFunc {
 				adr.Title = strings.Replace(firstLine, "# ", "", 1)
 			}
 
-			matchStatus, _ := regexp.MatchString(string("^"+PROPOSED+"|"+ACCEPTED+"|"+DEPRECATED+"|"+SUPERSEDED), line)
+			matchStatus, _ := regexp.MatchString(string("^"+PROPOSED+"|^"+ACCEPTED+"|^"+DEPRECATED+"|^"+SUPERSEDED), line)
 			if status == "" && matchStatus {
 				status = line
 				adr.Status = AdrStatus(status)
