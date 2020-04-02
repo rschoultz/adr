@@ -4,7 +4,6 @@
 
 [ ] Generate contents. `adr generate toc`
 
-[ ] Clean up the directory/path mangling.
 
 # Done
 
@@ -13,3 +12,5 @@
 [X] Use EDITOR/VISUAL
 
 [X] Per project configuration and templates
+
+[X] Clean up the directory/path mangling.

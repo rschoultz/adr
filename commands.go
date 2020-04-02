@@ -14,7 +14,9 @@ func setCommands(app *cli.App) {
 			Flags:   []cli.Flag{},
 			Action: func(c *cli.Context) error {
 
-				projectPath, _ := getProjectPathByCwd()
+				currentDir, _ := os.Getwd()
+				homeConfig := getHomeConfig()
+				projectPath, _ := getProjectPathBySubDir(currentDir, homeConfig)
 				currentConfig := getProjectConfig(projectPath)
 				currentConfig.CurrentAdr++
 				updateProjectConfig(projectPath, currentConfig)
@@ -37,9 +39,8 @@ func setCommands(app *cli.App) {
 					initDir = adrProjectConfigFolderName
 				}
 				initHomeDir()
-				initHomeConfigIfNotExists()
-				homeConfig := getHomeConfig()
-				newConfig, err := addProject(homeConfig, projectDir)
+				homeConfig := initHomeConfig()
+				newConfig, err := addProject(projectDir, homeConfig)
 				if err != nil {
 					os.Exit(1)
 				}
