@@ -50,7 +50,7 @@ func newAdr(projectPath string, config AdrProjectConfig, adrName []string) (adrF
 	if err != nil {
 		panic(err)
 	}
-	adrFileName := strconv.Itoa(adr.Number) + "-" + strings.Join(strings.Split(strings.Trim(adr.Title, "\n \t"), " "), "-") + ".md"
+	adrFileName := strconv.Itoa(adr.Number) + "-" + strings.Join(strings.Split(strings.Trim(strings.ToLower(adr.Title), "\n \t"), " "), "-") + ".md"
 	adrFullPath = filepath.Join(projectPath, config.BaseDir, adrFileName)
 	f, err := os.Create(adrFullPath)
 	if err != nil {
