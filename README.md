@@ -15,7 +15,7 @@ and grab one of the binaries that corresponds to your platform.
 
 Alternatively, if you have a Go developement environment setup you can install it directly using :
 ```bash
-go get github.com/marouni/adr && go install github.com/marouni/adr
+go get github.com/rschoultz/adr && go install github.com/rschoultz/adr
 ```
 
 ## Initializing adr
@@ -37,7 +37,7 @@ As simple as :
 ```bash
 adr new my awesome proposition
 ```
-ßthis will create a new numbered ADR in the initialized folder:
+This will create a new numbered ADR in the initialized folder:
 `docs/architecture/decisions/xxx-my-new-awesome-proposition.md`.
 
 Next, just open the file in your preferred markdown editor and starting writing your ADR.
