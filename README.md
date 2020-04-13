@@ -44,6 +44,17 @@ Next, just open the file in your preferred markdown editor and starting writing 
 If you have configured environment variables VISUAL or EDITOR, that editor will be called
 automatically.
 
+## Table of contents
+
+Generate a markdown table of contents by
+
+```bash
+adr generate toc
+```
+
+and using flag --prefix (or -p) you can prefix the links.
+
+
 ### Add both .adr and the decisions to source control
 
 ```bash
