@@ -1,4 +1,4 @@
-module github.com/schoultz/adr
+module github.com/rschoultz/adr
 
 go 1.14
 
