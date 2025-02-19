@@ -72,6 +72,7 @@ func visitAdrFile(adrs *[]Adr) filepath.WalkFunc {
 		var adr Adr
 		firstLine := ""
 		status := ""
+		var isAdr bool
 
 		if err != nil {
 			log.Fatal(err)
@@ -90,6 +91,7 @@ func visitAdrFile(adrs *[]Adr) filepath.WalkFunc {
 			if firstLine == "" && matchTitle {
 				firstLine = line
 				adr.Title = strings.Replace(firstLine, "# ", "", 1)
+				isAdr = true
 			}
 
 			matchStatus, _ := regexp.MatchString(string("^"+PROPOSED+"|^"+ACCEPTED+"|^"+DEPRECATED+"|^"+SUPERSEDED), line)
@@ -105,7 +107,10 @@ func visitAdrFile(adrs *[]Adr) filepath.WalkFunc {
 		}
 
 		adr.Filename = path
-		*adrs = append(*adrs, adr)
+		if isAdr {
+			*adrs = append(*adrs, adr)
+			isAdr = false
+		}
 
 		return nil
 	}
@@ -113,7 +118,8 @@ func visitAdrFile(adrs *[]Adr) filepath.WalkFunc {
 
 func getAdrs(projectPath string, currentConfig AdrProjectConfig) []Adr {
 	var adrs []Adr
-	adrDir := filepath.Join(projectPath, currentConfig.BaseDir)
+	//adrDir := filepath.Join(projectPath, currentConfig.BaseDir)
+	adrDir := filepath.Base(".adr")
 	err := filepath.Walk(adrDir, visitAdrFile(&adrs))
 	if err != nil {
 		color.Red("Could not open directory of ADRs: " + adrDir)
